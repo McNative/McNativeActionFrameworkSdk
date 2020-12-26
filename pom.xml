@@ -5,12 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.mcnative.actionframework.sdk</groupId>
-    <artifactId>McNativeActionFramework</artifactId>
+    <artifactId>McNativeActionFrameworkSdk</artifactId>
     <packaging>pom</packaging>
     <version>1.0.0.0-SNAPSHOT</version>
     <modules>
-        <module>mcnative-actionframework-common</module>
-        <module>mcnative-actionframework-client</module>
+        <module>mcnative-actionframework-sdk-common</module>
+        <module>mcnative-actionframework-sdk-client</module>
+        <module>mcnative-actionframework-sdk-actions</module>
     </modules>
 
     <properties>
