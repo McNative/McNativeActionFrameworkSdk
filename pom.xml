@@ -38,6 +38,13 @@
         <dependency.sentry>3.1.0</dependency.sentry>
     </properties>
 
+    <distributionManagement>
+        <repository>
+            <id>pretronic</id>
+            <url>https://repository.pretronic.net/repository/pretronic/</url>
+        </repository>
+    </distributionManagement>
+
     <repositories>
         <repository>
             <id>pretronic</id>
