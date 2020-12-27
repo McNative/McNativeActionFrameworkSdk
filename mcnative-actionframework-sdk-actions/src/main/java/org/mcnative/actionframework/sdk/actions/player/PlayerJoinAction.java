@@ -12,6 +12,7 @@ public class PlayerJoinAction implements MAFAction {
     public static final String NAME = "join";
 
     private UUID uniqueId;
+    private int protocolVersion;
 
     public PlayerJoinAction(UUID uniqueId) {
         this.uniqueId = uniqueId;
@@ -32,7 +33,7 @@ public class PlayerJoinAction implements MAFAction {
     }
 
     @Override
-    public void read(ByteBuf buffer) {
+    public void read(int version,ByteBuf buffer) {
         try {
             uniqueId = BufferUtil.readUniqueId(buffer);
         }catch (Exception e){

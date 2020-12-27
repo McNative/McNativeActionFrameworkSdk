@@ -19,7 +19,7 @@ public class ServerShutdownAction implements MAFAction {
     }
 
     @Override
-    public void read(ByteBuf buffer) {
+    public void read(int version,ByteBuf buffer) {
         //No content
     }
 

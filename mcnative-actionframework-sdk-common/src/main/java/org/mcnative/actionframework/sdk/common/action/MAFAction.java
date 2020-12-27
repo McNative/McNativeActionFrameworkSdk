@@ -9,18 +9,32 @@ public interface MAFAction {
 
     String getName();//.server.
 
-    default void read(byte[] content){
-        ByteBuf buffer = Unpooled.wrappedBuffer(content);
-        read(buffer);
-        buffer.release();
+    default byte getVersion(){
+        return 1;
     }
 
-    void read(ByteBuf buffer);
+    void read(int version,ByteBuf buffer);
 
     void write(ByteBuf buffer);
 
-    default void validate(){
 
+    default void readAction(byte[] content){
+        ByteBuf buffer = Unpooled.wrappedBuffer(content);
+        readAction(buffer);
+        buffer.release();
+    }
+
+    default void readAction(ByteBuf buffer){
+        read(buffer.readInt(),buffer);
+    }
+
+    default void writeAction(ByteBuf buffer){
+        buffer.writeInt(getVersion());
+        write(buffer);
+    }
+
+    default void validate(){
+        //not implemented
     }
 
 }

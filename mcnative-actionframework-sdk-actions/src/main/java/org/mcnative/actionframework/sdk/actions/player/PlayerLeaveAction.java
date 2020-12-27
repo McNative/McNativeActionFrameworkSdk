@@ -32,7 +32,7 @@ public class PlayerLeaveAction implements MAFAction {
     }
 
     @Override
-    public void read(ByteBuf buffer) {
+    public void read(int version,ByteBuf buffer) {
         try {
             uniqueId = BufferUtil.readUniqueId(buffer);
         }catch (Exception e){

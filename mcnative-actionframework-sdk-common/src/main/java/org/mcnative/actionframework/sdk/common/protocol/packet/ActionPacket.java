@@ -37,7 +37,7 @@ public class ActionPacket implements Packet{
 
     public MAFAction getAction() {
         if(action == null){
-            //@Todo create action
+
         }
         return action;
     }
@@ -53,7 +53,7 @@ public class ActionPacket implements Packet{
         BufferUtil.writeString(buffer,name);
 
         if(action == null) buffer.writeBytes(content);
-        else action.write(buffer);
+        else action.writeAction(buffer);
     }
 
     @Override

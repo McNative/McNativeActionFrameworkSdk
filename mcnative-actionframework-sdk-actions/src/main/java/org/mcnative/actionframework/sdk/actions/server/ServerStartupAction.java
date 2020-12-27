@@ -23,6 +23,13 @@ public class ServerStartupAction implements MAFAction {
     private Plugin[] plugins;
     private String[] databaseDrivers;
 
+    private String operatingSystem;
+    private String osArchitecture;
+    private String javaVersion;
+    private String deviceId;
+    private int maximumMemory;
+    private int availableCores;
+
     public ServerStartupAction(InetSocketAddress address, String platformName, String platformVersion, boolean platformProxy
             , String networkTechnology, int protocolVersion, int[] joinAbleProtocolVersions, int mcnativeBuildNumber
             , Plugin[] plugins, String[] databaseDrivers) {
@@ -89,7 +96,7 @@ public class ServerStartupAction implements MAFAction {
     }
 
     @Override
-    public void read(ByteBuf buffer) {
+    public void read(int version,ByteBuf buffer) {
         address = new InetSocketAddress(BufferUtil.readString(buffer),buffer.readInt());
         platformName = BufferUtil.readString(buffer);
         platformVersion = BufferUtil.readString(buffer);
