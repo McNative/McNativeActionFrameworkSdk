@@ -19,6 +19,7 @@ public interface MAFAction {
 
 
     default void readAction(byte[] content){
+        if(content.length == 0) return;
         ByteBuf buffer = Unpooled.wrappedBuffer(content);
         readAction(buffer);
         buffer.release();
