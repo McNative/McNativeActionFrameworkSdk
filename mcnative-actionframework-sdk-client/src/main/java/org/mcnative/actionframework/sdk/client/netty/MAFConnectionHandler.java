@@ -9,6 +9,8 @@ import org.mcnative.actionframework.sdk.common.action.MAFActionSubscription;
 import org.mcnative.actionframework.sdk.common.protocol.packet.ActionPacket;
 import org.mcnative.actionframework.sdk.common.protocol.packet.Packet;
 import org.mcnative.actionframework.sdk.common.protocol.packet.PacketTransport;
+import org.mcnative.actionframework.sdk.common.protocol.packet.handshake.HandshakePacket;
+import org.mcnative.actionframework.sdk.common.protocol.packet.handshake.HandshakeResultPacket;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,11 +24,15 @@ public class MAFConnectionHandler extends SimpleChannelInboundHandler<PacketTran
     public final int reconnectCount;
     public final Map<UUID, CompletableFuture> futures;
 
+    private boolean authenticated;
+
     protected MAFConnectionHandler(MAFConnection connection,StatusListener statusListener, int reconnectCount) {
         this.futures = new HashMap<>();
         this.connection = connection;
         this.statusListener = statusListener;
         this.reconnectCount = reconnectCount;
+
+        authenticated = false;
     }
 
     public void registerFuture(UUID uniqueId,CompletableFuture future){
@@ -37,6 +43,7 @@ public class MAFConnectionHandler extends SimpleChannelInboundHandler<PacketTran
     public void channelInactive(ChannelHandlerContext ctx)  {
         ctx.channel().close();
         ctx.close();
+        if(!authenticated) return;
         if(statusListener != null) statusListener.onDisconnect();
         if(reconnectCount > 0){
             for (int i = 0; i < reconnectCount; i++) {
@@ -63,6 +70,10 @@ public class MAFConnectionHandler extends SimpleChannelInboundHandler<PacketTran
     @SuppressWarnings("unchecked")
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, PacketTransport transport) {
+        if(!authenticated && transport.getPacket() instanceof HandshakeResultPacket){
+            authenticated = ((HandshakeResultPacket) transport.getPacket()).getResult().isSuccessful();
+        }
+
         CompletableFuture future = futures.get(transport.getTransactionId());
         if(future != null) future.complete(transport.getPacket());
         else{

@@ -57,7 +57,7 @@ public class ServerInfoAction implements MAFAction {
     public void write(ByteBuf buffer) {
         buffer.writeInt(plugins.length);
         for (Plugin plugin : plugins) {
-            BufferUtil.writeUniqueId(buffer,plugin.getId());
+            BufferUtil.writeUniqueId(buffer,plugin.getId() == null ? new UUID(0,0) : plugin.getId());
             BufferUtil.writeString(buffer,plugin.getName());
             BufferUtil.writeString(buffer,plugin.getVersion());
         }
