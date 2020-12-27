@@ -14,12 +14,17 @@ public class PlayerJoinAction implements MAFAction {
     private UUID uniqueId;
     private int protocolVersion;
 
-    public PlayerJoinAction(UUID uniqueId) {
+    public PlayerJoinAction(UUID uniqueId,int protocolVersion) {
         this.uniqueId = uniqueId;
+        this.protocolVersion = protocolVersion;
     }
 
     public UUID getUniqueId() {
         return uniqueId;
+    }
+
+    public int getProtocolVersion() {
+        return protocolVersion;
     }
 
     @Override
@@ -36,6 +41,7 @@ public class PlayerJoinAction implements MAFAction {
     public void read(int version,ByteBuf buffer) {
         try {
             uniqueId = BufferUtil.readUniqueId(buffer);
+            protocolVersion = buffer.readInt();
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -44,5 +50,6 @@ public class PlayerJoinAction implements MAFAction {
     @Override
     public void write(ByteBuf buffer) {
         BufferUtil.writeUniqueId(buffer,this.uniqueId);
+        buffer.writeInt(this.protocolVersion);
     }
 }
