@@ -13,6 +13,7 @@ public class ServerStartupAction implements MAFAction {
     public static final String NAME = "startup";
 
     private InetSocketAddress address;
+    private String serverGroup;
     private String platformName;
     private String platformVersion;
     private boolean platformProxy;
@@ -30,10 +31,12 @@ public class ServerStartupAction implements MAFAction {
     private int maximumMemory;
     private int availableCores;
 
-    public ServerStartupAction(InetSocketAddress address, String platformName, String platformVersion, boolean platformProxy
-            , String networkTechnology, int protocolVersion, int[] joinAbleProtocolVersions, int mcnativeBuildNumber
-            , Plugin[] plugins, String[] databaseDrivers) {
+    public ServerStartupAction(InetSocketAddress address, String serverGroup, String platformName, String platformVersion
+            , boolean platformProxy, String networkTechnology, int protocolVersion, int[] joinAbleProtocolVersions
+            , int mcnativeBuildNumber, Plugin[] plugins, String[] databaseDrivers, String operatingSystem
+            , String osArchitecture, String javaVersion, String deviceId, int maximumMemory, int availableCores) {
         this.address = address;
+        this.serverGroup = serverGroup;
         this.platformName = platformName;
         this.platformVersion = platformVersion;
         this.platformProxy = platformProxy;
@@ -43,10 +46,28 @@ public class ServerStartupAction implements MAFAction {
         this.mcnativeBuildNumber = mcnativeBuildNumber;
         this.plugins = plugins;
         this.databaseDrivers = databaseDrivers;
+        this.operatingSystem = operatingSystem;
+        this.osArchitecture = osArchitecture;
+        this.javaVersion = javaVersion;
+        this.deviceId = deviceId;
+        this.maximumMemory = maximumMemory;
+        this.availableCores = availableCores;
+    }
+
+    public static String getNAMESPACE() {
+        return NAMESPACE;
+    }
+
+    public static String getNAME() {
+        return NAME;
     }
 
     public InetSocketAddress getAddress() {
         return address;
+    }
+
+    public String getServerGroup() {
+        return serverGroup;
     }
 
     public String getPlatformName() {
@@ -85,6 +106,30 @@ public class ServerStartupAction implements MAFAction {
         return databaseDrivers;
     }
 
+    public String getOperatingSystem() {
+        return operatingSystem;
+    }
+
+    public String getOsArchitecture() {
+        return osArchitecture;
+    }
+
+    public String getJavaVersion() {
+        return javaVersion;
+    }
+
+    public String getDeviceId() {
+        return deviceId;
+    }
+
+    public int getMaximumMemory() {
+        return maximumMemory;
+    }
+
+    public int getAvailableCores() {
+        return availableCores;
+    }
+
     @Override
     public String getNamespace() {
         return NAMESPACE;
@@ -98,6 +143,7 @@ public class ServerStartupAction implements MAFAction {
     @Override
     public void read(int version,ByteBuf buffer) {
         address = new InetSocketAddress(BufferUtil.readString(buffer),buffer.readInt());
+        serverGroup = BufferUtil.readString(buffer);
         platformName = BufferUtil.readString(buffer);
         platformVersion = BufferUtil.readString(buffer);
         platformProxy = buffer.readBoolean();
@@ -122,12 +168,20 @@ public class ServerStartupAction implements MAFAction {
         for (int i = 0; i < databaseDrivers.length; i++) {
             databaseDrivers[i] = BufferUtil.readString(buffer);
         }
+
+        this.operatingSystem = BufferUtil.readString(buffer);
+        this.osArchitecture = BufferUtil.readString(buffer);
+        this.javaVersion = BufferUtil.readString(buffer);
+        this.deviceId = BufferUtil.readString(buffer);
+        this.maximumMemory = buffer.readInt();
+        this.availableCores = buffer.readInt();
     }
 
     @Override
     public void write(ByteBuf buffer) {
         BufferUtil.writeString(buffer,address.getHostName());
         buffer.writeInt(address.getPort());
+        BufferUtil.writeString(buffer,serverGroup);
         BufferUtil.writeString(buffer,platformName);
         BufferUtil.writeString(buffer,platformVersion);
         buffer.writeBoolean(platformProxy);

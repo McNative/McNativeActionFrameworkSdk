@@ -24,6 +24,12 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
+            <groupId>org.mcnative.actionframework.sdk</groupId>
+            <artifactId>mcnative-actionframework-sdk-actions</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>com.spotify</groupId>
             <artifactId>dns</artifactId>
             <version>${dependency.dns-java}</version>

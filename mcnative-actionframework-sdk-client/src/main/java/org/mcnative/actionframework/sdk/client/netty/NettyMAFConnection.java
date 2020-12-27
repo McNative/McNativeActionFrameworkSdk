@@ -21,15 +21,15 @@ public class NettyMAFConnection implements MAFConnection {
     private final MAFClient client;
     private final EventLoopGroup worker;
     private final Bootstrap clientBootstrap;
-    private final MAFConnectionHandler handler;
+    private final int reconnectCount;
+    private MAFConnectionHandler handler;
     private Channel channel;
 
     public NettyMAFConnection(MAFClient client, MAFClientConfiguration config){
         Validate.notNull(client,config);
         this.client = client;
         this.worker = NettyUtil.newEventLoopGroup();
-        int reconnectCount = config.isAutoReconnect() ? config.getMaxReconnectCount() : 0;
-        this.handler = new MAFConnectionHandler(this,client.getStatusListener(),reconnectCount);
+        this.reconnectCount = config.isAutoReconnect() ? config.getMaxReconnectCount() : 0;
         this.clientBootstrap = new Bootstrap()
                 .group(worker)
                 .option(ChannelOption.AUTO_READ, true)
@@ -54,6 +54,7 @@ public class NettyMAFConnection implements MAFConnection {
 
     @Override
     public void establish(InetSocketAddress address){
+        this.handler = new MAFConnectionHandler(this,client.getStatusListener(),reconnectCount);
         this.channel = clientBootstrap.connect(address).syncUninterruptibly().channel();
         if(this.client.getStatusListener() != null) this.client.getStatusListener().onConnect();
     }
