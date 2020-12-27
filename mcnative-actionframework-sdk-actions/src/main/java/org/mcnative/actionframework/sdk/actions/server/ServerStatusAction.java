@@ -13,6 +13,13 @@ public class ServerStatusAction implements MAFAction {
     private int usedMemory;
     private float cpuUsage;
 
+    public ServerStatusAction(int maximumPlayerCount, float tps, int usedMemory, float cpuUsage) {
+        this.maximumPlayerCount = maximumPlayerCount;
+        this.tps = tps;
+        this.usedMemory = usedMemory;
+        this.cpuUsage = cpuUsage;
+    }
+
     @Override
     public String getNamespace() {
         return NAMESPACE;

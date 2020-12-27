@@ -168,30 +168,11 @@ public class ServerStartupAction implements MAFAction {
             buffer.writeInt(version);
         }
         buffer.writeInt(mcnativeBuildNumber);
-    }
-
-    public static class Plugin {
-
-        private final UUID uniqueId;//Only McNative
-        private final String name;
-        private final String version;
-
-        public Plugin(UUID uniqueId, String name, String version) {
-            this.uniqueId = uniqueId;
-            this.name = name;
-            this.version = version;
-        }
-
-        public UUID getId() {
-            return uniqueId;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getVersion() {
-            return version;
-        }
+        BufferUtil.writeString(buffer,this.operatingSystem);
+        BufferUtil.writeString(buffer,this.osArchitecture);
+        BufferUtil.writeString(buffer,this.javaVersion);
+        BufferUtil.writeString(buffer,this.deviceId);
+        buffer.writeInt(this.maximumMemory);
+        buffer.writeInt(this.availableCores);
     }
 }
