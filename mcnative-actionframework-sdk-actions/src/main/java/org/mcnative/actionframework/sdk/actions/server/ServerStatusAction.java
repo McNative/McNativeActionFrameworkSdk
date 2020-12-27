@@ -38,4 +38,20 @@ public class ServerStatusAction implements MAFAction {
         this.usedMemory = buffer.readInt();
         this.cpuUsage = buffer.readFloat();
     }
+
+    public int getMaximumPlayerCount() {
+        return maximumPlayerCount;
+    }
+
+    public float getTps() {
+        return tps;
+    }
+
+    public int getUsedMemory() {
+        return usedMemory;
+    }
+
+    public float getCpuUsage() {
+        return cpuUsage;
+    }
 }
