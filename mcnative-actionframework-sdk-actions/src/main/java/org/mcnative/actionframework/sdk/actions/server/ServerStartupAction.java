@@ -21,8 +21,6 @@ public class ServerStartupAction implements MAFAction {
     private int protocolVersion;
     private int[] joinAbleProtocolVersions;
     private int mcnativeBuildNumber;
-    private Plugin[] plugins;
-    private String[] databaseDrivers;
 
     private String operatingSystem;
     private String osArchitecture;
@@ -33,7 +31,7 @@ public class ServerStartupAction implements MAFAction {
 
     public ServerStartupAction(InetSocketAddress address, String serverGroup, String platformName, String platformVersion
             , boolean platformProxy, String networkTechnology, int protocolVersion, int[] joinAbleProtocolVersions
-            , int mcnativeBuildNumber, Plugin[] plugins, String[] databaseDrivers, String operatingSystem
+            , int mcnativeBuildNumber, String operatingSystem
             , String osArchitecture, String javaVersion, String deviceId, int maximumMemory, int availableCores) {
         this.address = address;
         this.serverGroup = serverGroup;
@@ -44,8 +42,6 @@ public class ServerStartupAction implements MAFAction {
         this.protocolVersion = protocolVersion;
         this.joinAbleProtocolVersions = joinAbleProtocolVersions;
         this.mcnativeBuildNumber = mcnativeBuildNumber;
-        this.plugins = plugins;
-        this.databaseDrivers = databaseDrivers;
         this.operatingSystem = operatingSystem;
         this.osArchitecture = osArchitecture;
         this.javaVersion = javaVersion;
@@ -96,14 +92,6 @@ public class ServerStartupAction implements MAFAction {
 
     public int getMcnativeBuildNumber() {
         return mcnativeBuildNumber;
-    }
-
-    public Plugin[] getPlugins() {
-        return plugins;
-    }
-
-    public String[] getDatabaseDrivers() {
-        return databaseDrivers;
     }
 
     public String getOperatingSystem() {
@@ -157,18 +145,6 @@ public class ServerStartupAction implements MAFAction {
 
         mcnativeBuildNumber = buffer.readInt();
 
-        plugins = new Plugin[buffer.readInt()];
-        for (int i = 0; i < plugins.length; i++) {
-            plugins[i] = new Plugin(BufferUtil.readUniqueId(buffer)
-                    ,BufferUtil.readString(buffer)
-                    ,BufferUtil.readString(buffer));
-        }
-
-        databaseDrivers = new String[buffer.readInt()];
-        for (int i = 0; i < databaseDrivers.length; i++) {
-            databaseDrivers[i] = BufferUtil.readString(buffer);
-        }
-
         this.operatingSystem = BufferUtil.readString(buffer);
         this.osArchitecture = BufferUtil.readString(buffer);
         this.javaVersion = BufferUtil.readString(buffer);
@@ -192,16 +168,6 @@ public class ServerStartupAction implements MAFAction {
             buffer.writeInt(version);
         }
         buffer.writeInt(mcnativeBuildNumber);
-        buffer.writeInt(plugins.length);
-        for (Plugin plugin : plugins) {
-            BufferUtil.writeUniqueId(buffer,plugin.getId());
-            BufferUtil.writeString(buffer,plugin.getName());
-            BufferUtil.writeString(buffer,plugin.getVersion());
-        }
-        buffer.writeInt(databaseDrivers.length);
-        for (String driver : databaseDrivers) {
-            BufferUtil.writeString(buffer,driver);
-        }
     }
 
     public static class Plugin {
