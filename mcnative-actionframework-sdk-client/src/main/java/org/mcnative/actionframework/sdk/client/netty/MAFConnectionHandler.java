@@ -48,6 +48,7 @@ public class MAFConnectionHandler extends SimpleChannelInboundHandler<PacketTran
         if(reconnectCount > 0){
             for (int i = 0; i < reconnectCount; i++) {
                 try{
+                    Thread.sleep(5000);
                     connection.getClient().connect();
                     return;
                 }catch (Exception e){
