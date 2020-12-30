@@ -27,7 +27,7 @@
             <groupId>io.netty</groupId>
             <artifactId>netty-buffer</artifactId>
             <version>${dependency.netty}</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
