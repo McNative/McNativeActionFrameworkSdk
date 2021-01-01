@@ -9,7 +9,7 @@ import java.util.UUID;
 public class PlayerLeaveAction implements MAFAction {
 
     public static final String NAMESPACE = "ply";
-    public static final String NAME = "join";
+    public static final String NAME = "leave";
 
     private UUID uniqueId;
 
