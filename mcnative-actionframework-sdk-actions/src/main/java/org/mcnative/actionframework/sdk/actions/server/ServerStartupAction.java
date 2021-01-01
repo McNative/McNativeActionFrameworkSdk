@@ -12,6 +12,7 @@ public class ServerStartupAction implements MAFAction {
     public static final String NAMESPACE = "srv";
     public static final String NAME = "startup";
 
+    private String serverName;
     private InetSocketAddress address;
     private String serverGroup;
     private String platformName;
@@ -29,10 +30,11 @@ public class ServerStartupAction implements MAFAction {
     private int maximumMemory;
     private int availableCores;
 
-    public ServerStartupAction(InetSocketAddress address, String serverGroup, String platformName, String platformVersion
+    public ServerStartupAction(String serverName, InetSocketAddress address, String serverGroup, String platformName, String platformVersion
             , boolean platformProxy, String networkTechnology, int protocolVersion, int[] joinAbleProtocolVersions
             , int mcnativeBuildNumber, String operatingSystem
             , String osArchitecture, String javaVersion, String deviceId, int maximumMemory, int availableCores) {
+        this.serverName = serverName;
         this.address = address;
         this.serverGroup = serverGroup;
         this.platformName = platformName;
@@ -56,6 +58,10 @@ public class ServerStartupAction implements MAFAction {
 
     public static String getNAME() {
         return NAME;
+    }
+
+    public String getServerName() {
+        return serverName;
     }
 
     public InetSocketAddress getAddress() {
@@ -130,6 +136,7 @@ public class ServerStartupAction implements MAFAction {
 
     @Override
     public void read(int version,ByteBuf buffer) {
+        this.serverName = BufferUtil.readString(buffer);
         address = new InetSocketAddress(BufferUtil.readString(buffer),buffer.readInt());
         serverGroup = BufferUtil.readString(buffer);
         platformName = BufferUtil.readString(buffer);
@@ -155,6 +162,7 @@ public class ServerStartupAction implements MAFAction {
 
     @Override
     public void write(ByteBuf buffer) {
+        BufferUtil.writeString(buffer, this.serverName);
         BufferUtil.writeString(buffer,address.getHostName());
         buffer.writeInt(address.getPort());
         BufferUtil.writeString(buffer,serverGroup);
