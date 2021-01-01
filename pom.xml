@@ -7,7 +7,7 @@
     <groupId>org.mcnative.actionframework.sdk</groupId>
     <artifactId>McNativeActionFrameworkSdk</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.11.21-SNAPSHOT</version>
+    <version>1.0.12.22-SNAPSHOT</version>
     <modules>
         <module>mcnative-actionframework-sdk-common</module>
         <module>mcnative-actionframework-sdk-client</module>
