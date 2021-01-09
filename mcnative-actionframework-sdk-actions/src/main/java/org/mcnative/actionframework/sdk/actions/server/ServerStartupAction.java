@@ -165,7 +165,7 @@ public class ServerStartupAction implements MAFAction {
         BufferUtil.writeString(buffer, this.serverName);
         BufferUtil.writeString(buffer,address.getHostName());
         buffer.writeInt(address.getPort());
-        BufferUtil.writeString(buffer,serverGroup);
+        BufferUtil.writeString(buffer,serverGroup == null ? "none" : serverGroup);
         BufferUtil.writeString(buffer,platformName);
         BufferUtil.writeString(buffer,platformVersion);
         buffer.writeBoolean(platformProxy);
