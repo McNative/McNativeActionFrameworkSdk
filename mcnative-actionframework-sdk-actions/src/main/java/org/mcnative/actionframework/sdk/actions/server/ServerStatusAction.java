@@ -1,7 +1,9 @@
 package org.mcnative.actionframework.sdk.actions.server;
 
 import io.netty.buffer.ByteBuf;
+import net.pretronic.libraries.utility.Validate;
 import org.mcnative.actionframework.sdk.common.action.MAFAction;
+import org.mcnative.actionframework.sdk.common.protocol.codec.BufferUtil;
 
 public class ServerStatusAction implements MAFAction {
 
@@ -9,13 +11,14 @@ public class ServerStatusAction implements MAFAction {
     public static final String NAME = "status";
 
     private int maximumPlayerCount;
-    private float tps;
+    private float[] recentTps;
     private int usedMemory;
     private float cpuUsage;
 
-    public ServerStatusAction(int maximumPlayerCount, float tps, int usedMemory, float cpuUsage) {
+    public ServerStatusAction(int maximumPlayerCount, float[] recentTps, int usedMemory, float cpuUsage) {
+        Validate.isTrue(recentTps.length == 3, "Recent tps length must be 3");
         this.maximumPlayerCount = maximumPlayerCount;
-        this.tps = tps;
+        this.recentTps = recentTps;
         this.usedMemory = usedMemory;
         this.cpuUsage = cpuUsage;
     }
@@ -33,25 +36,34 @@ public class ServerStatusAction implements MAFAction {
     @Override
     public void read(int version, ByteBuf buffer) {
         this.maximumPlayerCount = buffer.readInt();
-        this.tps = buffer.readFloat();
+
+        this.recentTps = new float[3];
+        this.recentTps[0] = buffer.readFloat();
+        this.recentTps[1] = buffer.readFloat();
+        this.recentTps[2] = buffer.readFloat();
+
         this.usedMemory = buffer.readInt();
         this.cpuUsage = buffer.readFloat();
     }
 
     @Override
     public void write(ByteBuf buffer) {
-        this.maximumPlayerCount = buffer.readInt();
-        this.tps = buffer.readFloat();
-        this.usedMemory = buffer.readInt();
-        this.cpuUsage = buffer.readFloat();
+        buffer.writeInt(this.maximumPlayerCount);
+
+        buffer.writeFloat(this.recentTps[0]);
+        buffer.writeFloat(this.recentTps[1]);
+        buffer.writeFloat(this.recentTps[2]);
+
+        buffer.writeInt(this.usedMemory);
+        buffer.writeFloat(this.cpuUsage);
     }
 
     public int getMaximumPlayerCount() {
         return maximumPlayerCount;
     }
 
-    public float getTps() {
-        return tps;
+    public float[] getRecentTps() {
+        return recentTps;
     }
 
     public int getUsedMemory() {
