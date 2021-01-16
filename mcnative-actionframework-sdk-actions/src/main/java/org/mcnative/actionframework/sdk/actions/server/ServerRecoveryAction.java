@@ -11,9 +11,13 @@ import java.util.UUID;
 public class ServerRecoveryAction implements MAFAction {
 
     public static final String NAMESPACE = "srv";
-    public static final String NAME = "info";
+    public static final String NAME = "recovery";
 
     private Map<UUID, Integer> onlinePlayers;
+
+    public ServerRecoveryAction(Map<UUID, Integer> onlinePlayers) {
+        this.onlinePlayers = onlinePlayers;
+    }
 
     @Override
     public String getNamespace() {
