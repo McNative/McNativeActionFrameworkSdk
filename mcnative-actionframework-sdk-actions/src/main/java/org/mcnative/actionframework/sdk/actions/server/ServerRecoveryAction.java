@@ -29,6 +29,10 @@ public class ServerRecoveryAction implements MAFAction {
         return NAME;
     }
 
+    public Map<UUID, Integer> getOnlinePlayers() {
+        return onlinePlayers;
+    }
+
     @Override
     public void read(int version, ByteBuf buffer) {
         int size = buffer.readInt();
