@@ -56,6 +56,7 @@ public class NettyMAFConnection implements MAFConnection {
     public void establish(InetSocketAddress address){
         this.handler = new MAFConnectionHandler(this,client.getStatusListener(),reconnectCount);
         this.channel = clientBootstrap.connect(address).syncUninterruptibly().channel();
+        this.client.getLogger().info("Connected to McNative Action Framework");
         if(this.client.getStatusListener() != null) this.client.getStatusListener().onConnect();
     }
 

@@ -1,6 +1,7 @@
 package org.mcnative.actionframework.sdk.client;
 
 import net.pretronic.libraries.logging.PretronicLogger;
+import net.pretronic.libraries.utility.SystemUtil;
 import net.pretronic.libraries.utility.Validate;
 import net.pretronic.libraries.utility.exception.OperationFailedException;
 import net.pretronic.libraries.utility.reflect.UnsafeInstanceCreator;
@@ -80,6 +81,30 @@ public class DefaultMAFClient implements MAFClient {
         }else{
             throw new MAFConnectionFailedException(last);
         }
+    }
+
+    @Override
+    public void connectAsync() {
+        Thread thread = new Thread(() -> {
+            while (configuration.isAutoReconnect()){
+                try {
+                    connect();
+                    return;
+                }catch (MAFConnectionFailedException exception){
+                    logger.error("Could not connect to McNative action framework ("+exception.getMessage()+")");
+                    if(exception.getCause() instanceof OperationFailedException){
+                        logger.error("Reconnecting not possible, please check your setup");
+                        return;
+                    }
+                    if(configuration.isAutoReconnect()){
+                        SystemUtil.sleepUninterruptible(3000);
+                    }
+                }
+            }
+        });
+        thread.setDaemon(true);
+        thread.setName("MAF-Connector");
+        thread.start();
     }
 
     @Override

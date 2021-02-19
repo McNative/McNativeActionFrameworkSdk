@@ -21,6 +21,9 @@ public interface MAFClient {
 
     void connect();
 
+    void connectAsync();
+
+
     void disconnect();
 
 
@@ -30,7 +33,7 @@ public interface MAFClient {
 
     void sendAction(MAFAction action);
 
-    public static MAFClientBuilder build(){
+    static MAFClientBuilder build(){
         return new MAFClientBuilder();
     }
 

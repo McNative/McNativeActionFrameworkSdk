@@ -44,15 +44,16 @@ public class MAFConnectionHandler extends SimpleChannelInboundHandler<PacketTran
         ctx.channel().close();
         ctx.close();
         if(!authenticated) return;
+        this.connection.getLogger().info("Disconnected from McNative Action Framework");
         if(statusListener != null) statusListener.onDisconnect();
         if(reconnectCount > 0){
             for (int i = 0; i < reconnectCount; i++) {
                 try{
-                    Thread.sleep(5000);
+                    Thread.sleep(3000);
                     connection.getClient().connect();
                     return;
-                }catch (Exception e){
-                    e.printStackTrace();
+                }catch (Exception exception){
+                    connection.getLogger().error("Could not connect to McNative action framework ("+exception.getMessage()+")");
                 }
             }
         }
